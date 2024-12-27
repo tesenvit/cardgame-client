@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import InputComponent from '@/components/InputComponent.vue'
-import ButtonComponent from '@/components/ButtonComponent.vue'
-
 const formData = ref({
   email: '',
   password: ''
@@ -15,24 +12,33 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <form class="w-1/4" @submit.prevent="onSubmit">
-    <InputComponent
+  <v-form @submit.prevent>
+
+    <v-text-field
       v-model="formData.email"
-      type="email"
-      placeholder="Email address"
-      class="mb-4"
+      label="Email"
+      variant="outlined"
+      density="comfortable"
     />
 
-    <InputComponent
+    <v-text-field
       v-model="formData.password"
+      label="Password"
+      variant="outlined"
       type="password"
-      placeholder="Password"
-      class="mb-4"
+      density="comfortable"
     />
 
-    <ButtonComponent
+    <v-btn
+      class="mt-2"
       type="submit"
-      text="Submit"
-    />
-  </form>
+      block
+      @click="onSubmit"
+      variant="tonal"
+      size="large"
+    >
+      Submit
+    </v-btn>
+
+  </v-form>
 </template>
