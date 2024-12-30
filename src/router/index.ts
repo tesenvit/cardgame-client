@@ -20,19 +20,19 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const needAuth: boolean = to.matched.some((record) => record.meta.auth)
-
-  if (needAuth) {
-    const token = localStorage.getItem('token');
-    if (token) {
-      next()
-    } else {
-      next({ path: '/home' });
-    }
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   const needAuth: boolean = to.matched.some((record) => record.meta.auth)
+//
+//   if (needAuth) {
+//     const token = localStorage.getItem('token');
+//     if (token) {
+//       next()
+//     } else {
+//       next({ path: '/home' });
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router
