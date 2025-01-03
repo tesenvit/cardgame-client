@@ -1,26 +1,31 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import useLogin from '@/modules/auth/composables/useLogin'
-import type { ValidationError } from '@/types'
 import type { LoginFormData } from '@/modules/auth/types'
 import { DEFAULT_LOGIN_DATA } from '@/modules/auth/constants'
-import getFieldError from '@/helpers/getFieldError'
+import checkAllTruthy from '@/helpers/checkAllTruthy'
+import useFormErrors from '@/composables/useFormErrors'
 import { useRouter } from 'vue-router'
+import { useLoaderStore } from '@/stores'
 
-const router = useRouter()
+const router = useRouter();
+const formErrors = useFormErrors()
+const loader = useLoaderStore()
 
 const formData = ref<LoginFormData>(DEFAULT_LOGIN_DATA)
-const fieldsErrors = ref<ValidationError[]>([])
-
-const canSubmit = computed(() => !(formData.value.email.length && formData.value.password.length))
+const canSubmit = computed(() => !checkAllTruthy(formData.value))
 
 const onSubmit = async () => {
+  loader.show()
+
   try {
-    fieldsErrors.value = []
-    await useLogin(formData.value.email, formData.value.password)
+    formErrors.clear()
+    await useLogin(formData.value)
     await router.push({ name: 'lobby' })
   } catch (errors: any) {
-    fieldsErrors.value = errors || [];
+    formErrors.set(errors || [])
+  } finally {
+    loader.hide()
   }
 }
 </script>
@@ -33,7 +38,7 @@ const onSubmit = async () => {
       variant="outlined"
       density="comfortable"
       class="mb-2"
-      :error-messages="getFieldError('email', fieldsErrors)"
+      :error-messages="formErrors.getMessage('email')"
     />
 
     <v-text-field
@@ -42,7 +47,7 @@ const onSubmit = async () => {
       variant="outlined"
       type="password"
       density="comfortable"
-      :error-messages="getFieldError('password', fieldsErrors)"
+      :error-messages="formErrors.getMessage('password')"
     />
 
     <v-btn
@@ -56,6 +61,5 @@ const onSubmit = async () => {
     >
       Submit
     </v-btn>
-
   </v-form>
 </template>

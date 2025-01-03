@@ -8,3 +8,10 @@ export type LoginResponse = {
     access_token: string
   }
 }
+
+export type RegisterFormData = {
+  username: string,
+  email: string,
+  password: string,
+  confirmPassword: string
+}

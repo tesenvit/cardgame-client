@@ -1,0 +1,1 @@
+export default <T>(data: T): T => Object.assign({}, data)

@@ -1,0 +1,1 @@
+export default (data: Record<string, any>): boolean => Object.values(data).every(value => value)
